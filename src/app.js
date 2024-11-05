@@ -19,8 +19,25 @@ app.get("/musicians/:id", async(req, res) => {
 })
 
 app.use(express.json())
+app.use(express.urlencoded())
 
+app.post('/musicians', async (req, res) => {
+    const newMusician = await Musician.create(req.body)
+    res.status(201).json(newMusician)
+})
 
+app.put('/musicians', async (req, res) => {
+const musicianId = req.params.id
+const musician = await Musician.findByPk(musicianId)
+await musician.update(req.body)
+res.status(200).json(musician)
+})
 
+app.delete('/musicians', async (req, res) => {
+    const musicianId = req.params.id
+    const musician = await Musician.findByPk(musicianId)
+    await musician.destroy()
+    res.status(204).send
+})
 
 module.exports = app;
